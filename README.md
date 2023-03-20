@@ -1,3 +1,11 @@
+# Setup
+- Install `mvn`
+- JDK > 11
+- To generate JARs run:
+  - `mvn install -Dmaven.test.skip` 
+  - Copy generate files, `cp ./target/components <kafka/plugins directory>`
+  - Restart kafka
+
 # Kafka Connect JDBC Connector
 
 kafka-connect-jdbc is a [Kafka Connector](http://kafka.apache.org/documentation.html#connect)
