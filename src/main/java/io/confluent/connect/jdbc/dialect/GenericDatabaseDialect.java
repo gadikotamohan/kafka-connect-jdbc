@@ -65,7 +65,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
 import io.confluent.connect.jdbc.dialect.DatabaseDialectProvider.FixedScoreProvider;
 import io.confluent.connect.jdbc.sink.JdbcSinkConfig;
 import io.confluent.connect.jdbc.sink.JdbcSinkConfig.InsertMode;
@@ -94,6 +93,7 @@ import io.confluent.connect.jdbc.util.QuoteMethod;
 import io.confluent.connect.jdbc.util.TableDefinition;
 import io.confluent.connect.jdbc.util.TableId;
 import io.confluent.connect.jdbc.util.TableType;
+import io.debezium.data.VariableScaleDecimal;
 
 /**
  * A {@link DatabaseDialect} implementation that provides functionality based upon JDBC and SQL.
@@ -1742,6 +1742,12 @@ public class GenericDatabaseDialect implements DatabaseDialect {
               index,
               new java.sql.Time(((java.util.Date) value).getTime()),
               DateTimeUtils.getTimeZoneCalendar(timeZone)
+          );
+          return true;
+        case VariableScaleDecimal.LOGICAL_NAME:
+          statement.setBigDecimal(
+              index,
+              VariableScaleDecimal.toLogical((Struct) value).getDecimalValue().get()
           );
           return true;
         case org.apache.kafka.connect.data.Timestamp.LOGICAL_NAME:
